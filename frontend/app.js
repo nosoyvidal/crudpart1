@@ -46,12 +46,18 @@ function registrar() {
     })
         .then(res => res.json())
         .then(response => {
-            if (response.mensaje == "Error")
-                swal("Mensaje", "Error en el registro", "error");
-            else
-                swal("Mensaje", "Registro agregado exitosamente", "success");
-        });
+            if (response.mensaje == "Error") {
+                swal("Mensaje", "Hubo un error", "error");
+            } else {
+                swal("Mensaje", "Registro agregado correctamente", "success")
+                    .then(() => {
+                        location.href = 'index.html';
+                    });
+            }
+        })
+        .catch(error => console.log("Error en la solicitud:", error));
 }
+
 
 function modificar(id) {
     let url = `http://127.0.0.1:5000/actualizar/${id}`;

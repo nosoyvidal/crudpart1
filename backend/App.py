@@ -9,14 +9,14 @@ CORS(app)
 
 # Función para conectarnos a la base de datos de MySQL
 def conectar(host, user, vpass, vdb):
-    conn = pymysql.connect(host=host, user=user, passwd=vpass, db=vdb, charset='utf8mb4')
+    conn = pymysql.connect(host='localhost', user='root', passwd='root', db='gestor_contra', charset='utf8mb4')
     return conn
 
 # Ruta para consulta general del baúl de contraseñas
 @app.route("/")
 def consulta_general():
     try:
-        conn = conectar('localhost', 'root', '1234', 'gestor_contrasena')
+        conn = conectar('localhost', 'root', 'root', 'gestor_contra')
         cur = conn.cursor()
         cur.execute("SELECT * FROM baul")
         datos = cur.fetchall()
@@ -33,7 +33,7 @@ def consulta_general():
 @app.route("/consulta_individual/<codigo>", methods=['GET'])
 def consulta_individual(codigo):
     try:
-        conn = conectar('localhost', 'root', '1234', 'gestor_contrasena')
+        conn = conectar('localhost', 'root', 'root', 'gestor_contra')
         cur = conn.cursor()
         cur.execute("SELECT * FROM baul where id_baul='{0}'".format(codigo))
         datos = cur.fetchone()
@@ -49,9 +49,9 @@ def consulta_individual(codigo):
         return jsonify({'mensaje': 'Error'})
 
 @app.route("/registro/", methods=['POST'])
-def registro():
+def registrar():
     try:
-        conn = conectar('localhost', 'root', '1234', 'gestor_contrasena')
+        conn = conectar('localhost', 'root', 'root', 'gestor_contra')
         cur = conn.cursor()
         cur.execute("""INSERT INTO baul (plataforma, usuario, clave) VALUES ('{0}', '{1}', '{2}')""".format(
             request.json['plataforma'], request.json['usuario'], request.json['clave']
@@ -67,7 +67,7 @@ def registro():
 @app.route("/eliminar/<codigo>", methods=['DELETE'])
 def eliminar(codigo):
     try:
-        conn = conectar('localhost', 'root', '1234', 'gestor_contrasena')
+        conn = conectar('localhost', 'root', 'root', 'gestor_contra')
         cur = conn.cursor()
         cur.execute("""DELETE FROM baul WHERE id_baul='{0}'""".format(codigo))
         conn.commit()
@@ -81,7 +81,7 @@ def eliminar(codigo):
 @app.route("/actualizar/<codigo>", methods=['PUT'])
 def actualizar(codigo):
     try:
-        conn = conectar('localhost', 'root', '1234', 'gestor_contrasena')
+        conn = conectar('localhost', 'root', 'root', 'gestor_contra')
         cur = conn.cursor()
         cur.execute("""UPDATE baul SET plataforma='{0}', usuario='{1}', clave='{2}' WHERE id_baul={3}""".format(
             request.json['plataforma'], request.json['usuario'], request.json['clave'], codigo
